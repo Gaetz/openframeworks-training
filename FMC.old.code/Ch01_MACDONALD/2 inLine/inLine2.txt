@@ -1,0 +1,66 @@
+function setBrightness(col:Color, brightness:Number):Void {
+	var anum:Number = 100 - brightness;
+	var bnum:Number = 255 / 100 * brightness;
+	col.setTransform( {ra:anum, ga:anum, ba:anum, rb:bnum, gb:bnum, bb:bnum, aa:100, ab:0} );
+}
+var hsp:Number = 3;		// spacing on x-axis
+var total:Number = 70;	// total number of circles
+var twidth:Number = (total-1)*(hsp);	// total width of line of circles
+var brmin:Number = 0;	// minimum brightness
+var brmax:Number = 40;	// maximum brightness
+
+
+// speed of oscillation of scale
+function inc(val:Number):Number {
+	return 10;
+}
+// speed of oscillation of brightness
+function colinc(val:Number):Number {
+	return 40;
+}
+// magnitude of vertical oscillation
+function yMag(val:Number):Number {
+	return 1;
+}
+// minimum scale
+function minScale(val:Number):Number {
+	return 10;
+}
+// maximum scale
+function maxScale(val:Number):Number {
+	return 24;
+}
+// degree at which each circle starts
+function startDegree(val:Number) {
+	return 3 * val;
+}
+for(var i:Number = 0; i<total; i++) {
+	var noo:MovieClip = _root.attachMovie("ball", "ball" + i, i);
+	var offset:Number = Math.abs((total / 2) - i);
+	noo._y = Stage.height / 2;
+	noo._x = (Stage.width - twidth) / 2 + hsp * i;
+	noo.baseY = Stage.height / 2;
+	noo._xscale = noo._yscale = minScale();
+	noo.inc = inc(offset);
+	noo.colinc = colinc(offset);
+	noo.col = new Color(noo);
+	noo.brmin = brmin;
+	noo.brmax = brmax;
+	noo.degree = noo.coldegree = startDegree(offset);
+	noo.brvariation = noo.brmax - noo.brmin;
+	noo.yMag = yMag(offset);
+	noo.minScale = minScale(offset);
+	noo.maxScale = maxScale(offset);
+	noo.variation = noo.maxScale - noo.minScale;
+	noo.onEnterFrame = oscillate;
+}
+function oscillate(Void):Void {
+	this.degree += this.inc;
+	var value:Number = Math.sin(this.degree * Math.PI / 180);
+	this._xscale = this._yscale = this.minScale + (this.variation / 2) + (this.variation / 2) * value;
+	this.coldegree += this.colinc;
+	var value2:Number = Math.sin(this.coldegree * Math.PI / 180);
+	var brightness:Number = this.brmin + (this.brvariation / 2) + (this.brvariation / 2) * value2;
+	setBrightness(this.col, brightness);
+	this._y = this.baseY + value2 * this.yMag;
+}

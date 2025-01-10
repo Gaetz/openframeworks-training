@@ -1,0 +1,64 @@
+var leftBounds:Number = 20;
+var topBounds:Number = 20;
+var x:Number = leftBounds;
+var y:Number = topBounds;
+var rightBounds:Number = 380;
+var bottomBounds:Number = 380;
+var baseMax:Number = 20;
+var randomMax:Number = 10;
+var maxLines:Number = 2000;
+var counter:Number = 0;
+var line:MovieClip;
+onEnterFrame = function () {
+	if(line.done || counter < 1){
+		counter++;
+		line = createEmptyMovieClip("line" + counter, counter);
+		line._xscale = 0;
+		line._yscale = 0;
+		line.steps = 10;
+		line.x = 100 / 10;
+		line.y = 100 / 10;
+		line.r = 360 / 10;
+		line.onEnterFrame = grow;
+		line.lineStyle(1, 0, 100);
+		line._x = x;
+		line._y = y;
+		var maxDistance:Number = baseMax * Math.random() * randomMax;
+		var minDistance:Number = 2;
+		var direction:Number = Math.random() < 0.5 ? -1 : 1;
+		var xEnd:Number = x + (direction * (minDistance + Math.random() * maxDistance));
+		direction = Math.random() < 0.5 ? -1 : 1;
+		var yEnd:Number = y + (direction * (minDistance + Math.random() * maxDistance));
+		// 
+		if (xEnd < leftBounds) {
+			xEnd = leftBounds;
+		}
+		if (xEnd > rightBounds) {
+			xEnd = rightBounds;
+		}
+		if (yEnd < topBounds) {
+			yEnd = topBounds;
+		}
+		if (yEnd > bottomBounds) {
+			yEnd = bottomBounds;
+		}
+		// 
+		line.lineTo(xEnd - x, yEnd - y);
+		x = xEnd;
+		y = yEnd;
+		if (counter > maxLines) {
+			delete onEnterFrame;
+		}
+	}
+};
+function grow(){
+	if(this.steps > 0){
+		this._xscale += this.x;
+		this._yscale += this.y;
+		this._rotation += this.r;
+	} else {
+		this.done = true;
+		delete this.onEnterFrame;
+	}
+	this.steps--;
+}

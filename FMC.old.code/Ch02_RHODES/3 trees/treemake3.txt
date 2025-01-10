@@ -1,0 +1,54 @@
+var numsticks:Number = 1;
+var maxsticks:Number = 200;
+var da:Number = 45;
+var sticklen:Number = 40;
+attachMovie("stick", "stick", 0);
+stick._x = Stage.width / 2;
+stick._y = Stage.height - 100;
+stick.destr = 90;
+stick._rotation = 90;
+stick.onEnterFrame = tree;
+function tree() {
+	if (this.destr<-180) {
+		this.destr += 360;
+	}
+	if (this.destr>180) {
+		this.destr -= 360;
+	}
+	if (this._rotation<-180) {
+		this._rotation += 360;
+	}
+	if (this._rotation>180) {
+		this._rotation -= 360;
+	}
+	if (this._rotation>this.destr) {
+		this._rotation--;
+	}
+	if (this._rotation<this.destr) {
+		this._rotation++;
+	}
+	this._rotation = Math.floor(this._rotation);
+	if (this._rotation == this.destr && numsticks<maxsticks && this.dead != true) {
+		var ra:Number = this._rotation*(Math.PI/180);
+		var len:Number = (Math.random() * (sticklen - 10)) + 10;
+		var dx:Number = Math.cos(ra) * len;
+		var dy:Number = Math.sin(ra) * len;
+		var randa:Number = Math.floor(Math.random() * da);
+		
+		var nm:MovieClip = attachMovie("stick", "st" + numsticks, numsticks++);
+		nm._x = this._x - dx;
+		nm._y = this._y - dy;
+		nm._rotation = this._rotation;
+		nm.destr = this._rotation - randa;
+		nm.onEnterFrame = tree;
+
+		nm = attachMovie("stick", "st" + numsticks, numsticks++);
+		nm._x = this._x - dx;
+		nm._y = this._y - dy;
+		nm._rotation = this._rotation;
+		nm.destr = this._rotation + randa;
+		nm.onEnterFrame = tree;
+
+		this.dead = true;
+	}
+};

@@ -1,0 +1,17 @@
+_quality = "LOW";
+var r:Number = 0;
+var s:Number = 0;
+var a:Number = 100;
+for (var i = 0; i<120; i++) {
+	var nm:MovieClip = attachMovie("petal", "petal" + i, i);
+	nm._x = Stage.width/2;
+	nm._y = Stage.height/2;
+	nm._rotation = r += 27;
+	nm._alpha = a -= 0.5;
+	s += 0.03;
+	nm._xscale = nm._yscale= s * s * s + 10;
+	nm.swapDepths(2000-nm._xscale);
+	nm.onEnterFrame = function(){
+		this._xscale--;
+	}
+}

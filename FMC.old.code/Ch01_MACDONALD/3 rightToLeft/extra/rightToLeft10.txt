@@ -1,0 +1,98 @@
+fscommand("allowscale","false")
+stageWidth=550
+stageHeight=400
+color.prototype.setBrightness=function(brightness){
+	var anum=100-brightness
+	var bnum=255/100*brightness
+	this.setTransform({ra:anum,ga:anum,ba:anum,rb:bnum,gb:bnum,bb:bnum,aa:100,ab:0})
+}
+
+frequency=9 // how often circles are created
+colMin=10 // minimum brightness
+colMax=50 // maximum brightness
+colVariance=colMax-colMin // range of brightness
+
+// how fast the circles move across the screen
+function leftRightSpeed(){
+	return -2
+}
+
+// maximum scale
+function maxScale(){
+	return 120
+}
+
+// minimum scale
+function minScale(){
+	return 0
+}
+
+// radius of the circle the ball moves around
+function leftRightRadius(){
+	return 80
+}
+
+// speed at which the ball moves around the circle
+function circlingSpeed(){
+	return 4
+}
+
+// degree at which the ball starts on the circle
+function circleStartPoint(){
+	return 0
+}
+
+// range of the ball's up/down motion
+function upDownRange(){
+	return 70
+}
+
+// speed at which the ball moves up and down
+function yFreqInc(){
+	return 10
+}
+
+// setting the brightness for each ball
+function nooCol(val){
+	val*=30 // increase this number and the colors will oscillate more
+	return colMin+colvariance*0.5+(0.5*colVariance)*Math.sin(val*Math.PI/180)
+}
+
+
+
+function control(){
+	g++
+	if(g>frequency){
+		g=0
+		depth++
+		_root.attachMovie("ball","ball"+depth,depth)
+		noo=_root["ball"+depth]
+		noo._y=stageHeight/2
+		noo.fulcrumX=noo._x=stageWidth+30
+		noo.maxScale=maxscale()
+		noo.minScale=minScale()
+		col=new Color(noo)
+		col.setBrightness(nooCol(depth))
+		noo.variance=noo.maxScale-noo.minScale
+		noo.acrossRadius=leftRightRadius()
+		noo.upDownRange=upDownRange()
+		noo.degree=circleStartPoint()
+		noo.degreeInc=circlingSpeed()	
+		noo.yFreqInc=yFreqInc()
+		noo.leftRightSpeed=leftRightSpeed()
+		noo.myfunc=shootMeAcross
+	}
+}
+
+function shootMeAcross(){
+	fulcrumX+=leftRightSpeed
+	degree+=degreeInc	
+	_x=fulcrumx+Math.cos(degree*Math.PI/180)*acrossRadius
+	_xscale=_yscale=minScale+(variance*0.5)+(variance*0.5)*Math.sin(degree*Math.PI/180)
+	yfreq+=yfreqinc
+	_y=_root.stageHeight/2+upDownRange*Math.sin(yfreq*Math.PI/180)
+	this.swapDepths(Math.floor(_xscale))
+	if(_x<-40){
+		this.removeMovieClip()
+	}
+}

@@ -1,0 +1,7 @@
+for(var i:Number=0; i<120; i++) {
+	var nm:MovieClip = attachMovie("petal", "petal" + i, i);
+	nm._x = Stage.width / 2;
+	nm._y = Stage.height / 2;
+	nm._rotation = Math.random() * 360;
+	nm._xscale = nm._yscale = Math.random() * 100 + 20;
+}

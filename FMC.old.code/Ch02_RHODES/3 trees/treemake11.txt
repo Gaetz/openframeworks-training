@@ -1,0 +1,34 @@
+var numsticks:Number = 1;
+var maxsticks:Number = 400;
+var da:Number = 45;
+var sticklen:Number = 45;
+attachMovie("stick", "stick", 0);
+stick._x = Stage.width / 2;
+stick._y = Stage.height - 100;
+stick.destr = 90;
+stick._rotation = 90;
+stick.onEnterFrame = tree;
+function tree() {
+	if (numsticks<maxsticks && this.dead != true) {
+		var ra:Number = this._rotation*(Math.PI/180);
+		var len:Number = sticklen - 5;
+		var dx:Number = Math.cos(ra) * len;
+		var dy:Number = Math.sin(ra) * len;
+		
+		var nm:MovieClip = attachMovie("stick", "st" + numsticks, numsticks++);
+		nm._x = this._x - dx;
+		nm._y = this._y - dy;
+		nm._rotation = this._rotation - da;
+		nm._alpha = this._alpha - 10;
+		nm.onEnterFrame = tree;
+
+		nm = attachMovie("stick", "st" + numsticks, numsticks++);
+		nm._x = this._x - dx;
+		nm._y = this._y - dy;
+		nm._rotation = this._rotation + da;
+		nm._alpha = this._alpha - 10;
+		nm.onEnterFrame = tree;
+
+		this.dead = true;
+	}
+};

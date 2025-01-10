@@ -1,0 +1,37 @@
+_quality = "LOW";
+var fade:Number = 0.9;
+var counter:Number = 2;
+attachMovie("master", "master", 0);
+master.c = new Color(master);
+master.r = 0;
+master.g = 0;
+master.b = 0;
+master.ang = 0;
+master.onEnterFrame = function() {
+	this._x = 275 + Math.cos(3.2 * this.ang) * 200;
+	this._y = 200 + Math.sin(2 * this.ang) * 170;
+	this._rotation += 24;
+	this.ang += 0.07;
+	this.r = 0;
+	this.g = 250 - (this._y / 2);
+	this.b = (this._x / 2);
+
+	var col:Number = (this.r << 16) + (this.g << 8) + this.b;
+	this.c.setRGB ();
+	
+	var copy:MovieClip = attachMovie("master", "copy" + counter, counter++);
+	var copyCol = new Color(copy);
+	copyCol.setRGB(col);
+	
+	copy._x = this._x;
+	copy._y = this._y;
+	copy._rotation = this._rotation;
+	copy.onEnterFrame = function() {
+		this._alpha *= _root.fade;
+		this._xscale = this._alpha;
+		this._rotation += 5;
+		if (this._alpha <= 3) {
+			this.removeMovieClip();
+		}
+	};
+};

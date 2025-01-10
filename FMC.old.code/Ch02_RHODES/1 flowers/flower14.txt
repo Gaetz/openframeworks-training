@@ -1,0 +1,11 @@
+var r:Number = 0;
+var s:Number = 0;
+for (var i = 0; i<220; i++) {
+	var nm:MovieClip = attachMovie("petal", "petal" + i, i);
+	nm._x = Stage.width/2;
+	nm._y = Stage.height/2;
+	nm._rotation = r += 6;
+	s += 0.04;
+	nm._xscale = nm._yscale= s * s * s + 10;
+	nm.swapDepths(2000-nm._xscale);
+}

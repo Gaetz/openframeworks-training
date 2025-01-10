@@ -1,0 +1,53 @@
+var leftBounds:Number = -100;
+var topBounds:Number = -100;
+var x:Number = 150;
+var y:Number = 150;
+var rightBounds:Number = 100;
+var bottomBounds:Number = 100;
+var baseMax:Number = 20;
+var randomMax:Number = 10;
+var maxLines:Number = 300;
+var counter:Number = 0;
+var alpha:Number = 0;
+createEmptyMovieClip("lines", 0);
+lines._x = 221;
+lines._y = 170;
+lines.setMask(mask);
+lines.onEnterFrame = function(){
+	this._rotation++;
+}
+onEnterFrame = makeLine;
+function makeLine() {
+	counter++;
+	var line:MovieClip = lines.createEmptyMovieClip("line" + counter, counter);
+	line._x = x;
+	line._y = y;
+	var maxDistance:Number = baseMax * Math.random() * randomMax;
+	var minDistance:Number = 2;
+	line.lineStyle(maxDistance / 20, 0x006699, 20);
+	var direction:Number = Math.random() < 0.5 ? -1 : 1;
+	var xEnd:Number = x + (direction * (minDistance + Math.random() * maxDistance));
+	direction = Math.random() < 0.5 ? -1 : 1;
+	var yEnd:Number = y + (direction * (minDistance + Math.random() * maxDistance));
+	// 
+	if (xEnd < leftBounds) {
+		xEnd = leftBounds;
+	}
+	if (xEnd > rightBounds) {
+		xEnd = rightBounds;
+	}
+	if (yEnd < topBounds) {
+		yEnd = topBounds;
+	}
+	if (yEnd > bottomBounds) {
+		yEnd = bottomBounds;
+	}
+	// 
+	line.lineTo(xEnd - x, yEnd - y);
+	x = xEnd;
+	y = yEnd;
+	this["line" + (counter + maxLines - 10)].removeMovieClip();
+	if (counter > maxLines) {
+		delete onEnterFrame;
+	}
+};

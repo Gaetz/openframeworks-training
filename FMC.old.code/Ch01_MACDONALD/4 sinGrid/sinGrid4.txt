@@ -1,0 +1,68 @@
+function setBrightness(col:Color, brightness:Number):Void {
+	var anum:Number = 100-brightness;
+	var bnum:Number = 255/100*brightness;
+	col.setTransform({ra:anum, ga:anum, ba:anum, rb:bnum, gb:bnum, bb:bnum, aa:100, ab:0});
+}
+
+
+var across:Number = 10;								// number of circles across
+var down:Number = 10;								// number of circles down
+var total:Number = across*down;						// total number of circles
+var hsp:Number = 20;								// horizontal spacing
+var vsp:Number = 20;								// vertical spacing
+var degInc:Number = 360 / total;					// number of degree per circle to span one complete oscillation
+var numberOfOscillations:Number = 0.5;				// how much of a complete curve to display at once
+var bx:Number = (Stage.width - hsp * across) / 2;	// starting x position
+var by:Number = (Stage.height - vsp * down) / 2;	// starting y position
+
+// how fast the wave moves across - we pass this an offset value which represents how many positions away form the centre the current circle is.
+function increment(offset):Number {
+	return 30;
+}
+// minimum scale
+function minScale(Void):Number {
+	return 3;
+}
+// maximum scale
+function maxScale(Void):Number {
+	return 54;
+}
+// minimum brightness
+function minBrt(Void):Number {
+	return 0;
+}
+// maximum brightness
+function maxBrt(Void):Number {
+	return 50;
+}
+
+var row:Number = 0;
+var column:Number = 0;
+for (i=0; i<total; i++) {
+	var noo:MovieClip = attachMovie("ball", "circ" + i, i);
+	noo._x = bx + column * hsp;
+	noo._y = by + row * vsp;
+	noo.col = new Color(noo);
+	var offset:Number = Math.abs(total / 2 - i);
+	noo.myInc = increment(offset);
+	noo.minScale = minScale();
+	noo.maxScale = maxScale();
+	noo.variance = noo.maxScale - noo.minScale;
+	noo.minBrt = minBrt();
+	noo.maxBrt = maxBrt();
+	noo.colVariance = noo.maxBrt - noo.minBrt;
+	noo.onEnterFrame = undulate;
+	noo.degree = i * degInc * numberOfOscillations;
+	column++;
+	if (column == across) {
+		column = 0;
+		row++;
+	}
+}
+function undulate(Void):Void {
+	this.degree += this.myInc;
+	var sinVal:Number = Math.sin(this.degree * Math.PI / 180);
+	this._xscale = this._yscale = this.minScale + (this.variance * 0.5) + (this.variance * 0.5) * sinVal;
+	var brightness:Number = this.minBrt + (0.5 * this.colVariance) + (0.5 * this.colVariance) * sinVal;
+	setBrightness(this.col, brightness);
+}

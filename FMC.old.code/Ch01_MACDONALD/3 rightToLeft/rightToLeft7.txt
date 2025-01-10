@@ -1,0 +1,85 @@
+function setBrightness(col:Color, brightness:Number):Void {
+	var anum:Number = 100 - brightness;
+	var bnum:Number = 255 / 100 * brightness;
+	col.setTransform({ra:anum, ga:anum, ba:anum, rb:bnum, gb:bnum, bb:bnum, aa:100, ab:0});
+}
+var frequency:Number = 1;	// how often circles are created
+var colMin:Number = 0;		// minimum brightness
+var colMax:Number = 100;		// maximum brightness
+var colVariance:Number = colMax - colMin;// range of brightness
+
+// how fast the circles move across the screen
+function leftRightSpeed(Void):Number {
+	return -4;
+}
+// maximum scale
+function maxScale(Void):Number {
+	return 40;
+}
+// minimum scale
+function minScale(Void):Number {
+	return 0;
+}
+// radius of the circle the ball moves around
+function leftRightRadius(Void):Number {
+	return 80;
+}
+// speed at which the ball moves around the circle
+function circlingSpeed(Void):Number {
+	return 5;
+}
+// degree at which the ball starts on the circle
+function circleStartPoint(Void):Number {
+	return 0;
+}
+// range of the ball's up/down motion
+function upDownRange(Void):Number {
+	return 19;
+}
+// speed at which the ball moves up and down
+function yFreqInc(Void):Number {
+	return 5;
+}
+// setting the brightness for each ball
+function nooCol(val):Number {
+	val *= 30;
+	// increase this number and the colors will oscillate more
+	return colMin + colVariance * 0.5 + (0.5 * colVariance) * Math.sin(val * Math.PI / 180);
+}
+var g:Number = 0;
+var depth:Number = 0;
+onEnterFrame = function(Void):Void {
+	g++;
+	if (g > frequency) {
+		g = 0;
+		depth++;
+		var noo = attachMovie("ball", "ball" + depth, depth);
+		noo._y = Stage.height / 2;
+		noo.fulcrumX = noo._x = Stage.width + 30;
+		noo.maxScale = maxScale();
+		noo.minScale = minScale();
+		var col:Color = new Color(noo);
+		setBrightness(col, nooCol(depth));
+		noo.variance = noo.maxScale - noo.minScale;
+		noo.acrossRadius = leftRightRadius();
+		noo.upDownRange = upDownRange();
+		noo.degree = circleStartPoint();
+		noo.degreeInc = circlingSpeed();
+		noo.yFreq = 0;
+		noo.yFreqInc = yFreqInc();
+		noo.leftRightSpeed = leftRightSpeed();
+		noo.onEnterFrame = shootMeAcross;
+	}
+};
+function shootMeAcross(Void):Void {
+	this.fulcrumX += this.leftRightSpeed;
+	this.degree += this.degreeInc;
+	this._x = this.fulcrumX+Math.cos(this.degree * Math.PI / 180) * this.acrossRadius;
+	this._xscale = this._yscale = this.minScale+(this.variance * 0.5) + (this.variance * 0.5) * Math.sin(this.degree * Math.PI / 180);
+	this.yFreq += this.yFreqInc;
+	this._y = Stage.height / 2 + this.upDownRange * Math.sin(this.yFreq * Math.PI / 180);
+	this.swapDepths(Math.floor(this._xscale));
+	if (this._x < -40) {
+		this.removeMovieClip();
+	}
+}

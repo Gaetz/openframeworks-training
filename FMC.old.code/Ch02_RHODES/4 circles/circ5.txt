@@ -1,0 +1,24 @@
+var num:Number = 0;
+for (i=0; i<10; i++) {
+	for (j=0; j<10; j++) {
+		var nm:MovieClip = attachMovie("circle", "cir"+num, num);
+		nm._xscale = 171;
+		nm._yscale = 171;
+		nm._x = i * nm._width;
+		nm._y = j * nm._height;
+		nm.sx = nm._xscale;
+		nm.sy = nm._yscale;
+		nm.ang = 0;
+		nm.mynum = num;
+		var c:Color = new Color(nm);
+		var r:Number = nm._x;
+		var g:Number = 0;
+		var b:Number = nm._y;
+		c.setRGB((r << 16) + (g << 8) + b);
+		num++;
+		nm.onEnterFrame = function() {
+			this._x = this._yscale = this._xscale = this.sx + (Math.sin(this.ang) * (this.mynum * 2));
+			this.ang += this.mynum / 450;
+		};
+	}
+}

@@ -1,0 +1,46 @@
+var leftBounds:Number = 20;
+var topBounds:Number = 20;
+var x:Number = leftBounds;
+var y:Number = topBounds;
+var rightBounds:Number = 380;
+var bottomBounds:Number = 380;
+var baseMax:Number = 6;
+var randomMax:Number = 6;
+var maxLines:Number = 2000;
+var counter:Number = 0;
+onEnterFrame = function () {
+	counter++;
+	var line:MovieClip = createEmptyMovieClip("line" + (counter + maxLines), counter + maxLines);
+	line.lineStyle(1, 0, 100);
+	var circle:MovieClip = attachMovie("circle", "circle" + counter, counter);
+	line._x = circle._x = x;
+	line._y = circle._y = y;
+	var maxDistance:Number = baseMax * Math.random() * randomMax;
+	var minDistance:Number = 2;
+	circle._xscale = maxDistance * .4;
+	circle._yscale = maxDistance * .4;
+	var direction:Number = Math.random() < 0.5 ? -1 : 1;
+	var xEnd:Number = x + (direction * (minDistance + maxDistance));
+	direction = Math.random() < 0.5 ? -1 : 1;
+	var yEnd:Number = y + (direction * (minDistance + maxDistance));
+	// 
+	if (xEnd < leftBounds) {
+		xEnd = leftBounds;
+	}
+	if (xEnd > rightBounds) {
+		xEnd = rightBounds;
+	}
+	if (yEnd < topBounds) {
+		yEnd = topBounds;
+	}
+	if (yEnd > bottomBounds) {
+		yEnd = bottomBounds;
+	}
+	// 
+	line.lineTo(xEnd - x, yEnd - y);
+	x = xEnd;
+	y = yEnd;
+	if (counter > maxLines) {
+		delete onEnterFrame;
+	}
+};

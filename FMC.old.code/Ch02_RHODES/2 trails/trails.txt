@@ -1,0 +1,38 @@
+_quality = "LOW";
+var fade:Number = 0.9;
+var counter:Number = 1;
+attachMovie("master", "master", 0);
+master.dx = 4;
+master.dy = 4;
+master.dr = 1;
+master.onEnterFrame = function() {
+	this._x += this.dx;
+	this._y += this.dy;
+	this._rotation += this.dr;
+	if (this._x > 550) {
+		this._x = 550;
+		this.dx *= -1;
+	}
+	if (this._x < 0) {
+		this._x = 0;
+		this.dx *= -1;
+	}
+	if (this._y > 400) {
+		this._y = 400;
+		this.dy *= -1;
+	}
+	if (this._y < 0) {
+		this._y = 0;
+		this.dy *= -1;
+	}
+	var copy:MovieClip = attachMovie("master", "copy" + counter, counter++);
+	copy._x = this._x;
+	copy._y = this._y;
+	copy._rotation = this._rotation;
+	copy.onEnterFrame = function() {
+		this._alpha *= _root.fade;
+		if (this._alpha <= 3) {
+			this.removeMovieClip();
+		}
+	};
+};

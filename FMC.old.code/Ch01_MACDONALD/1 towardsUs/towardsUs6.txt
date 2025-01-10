@@ -1,0 +1,76 @@
+function setBrightness(col:Color, brightness:Number):Void {
+	var anum:Number = 100 - brightness;
+	var bnum:Number = 255 / 100 * brightness;
+	col.setTransform( {ra:anum, ga:anum, ba:anum, rb:bnum, gb:bnum, bb:bnum, aa:100, ab:0} );
+};
+var scaleMax:Number = 400;	// maximum scale before fading out
+var fadeOut:Number = 0.7;	// speed of fade out
+var frequency:Number = 2;	// how often a movieclip is created
+var colMin:Number = 0;		// minimum brightness
+var colMax:Number = 90;		// maximum brightness
+var colVariance:Number = colMax - colMin;	// variation in brightness
+
+
+// magnitude of horizontal motion
+function hRad(Void):Number {
+	return 0;
+}
+// magnitude of vertical motion
+function vRad(Void):Number {
+	return 0;
+}
+// speed at which vertical magnitude increases
+function vRadInc(Void):Number {
+	return 0;
+}
+// speed at which horizontal magnitude increases
+function hRadInc(Void):Number {
+	return 5 * Math.random();
+}
+// speed of oscillation
+function lrSpeed(Void):Number {
+	return 3 + Math.random() * 3;
+}
+// speed at which the object expands
+function scaleUpSpeed(Void):Number {
+	return 1.05;
+}
+// brightness for each movieclip
+function nooCol(Void):Number {
+	return colMin + Math.random() * colVariance;
+}
+var depth:Number = 0;
+onEnterFrame = function () {
+	if (Math.floor(Math.random() * frequency) == 0) {
+		depth++;
+		var noo:MovieClip = _root.attachMovie("ball", "ball" + depth, depth);
+		var col:Color = new Color(noo);
+		setBrightness(col, nooCol());
+		noo._x = -50;
+		noo._y = -50;
+		noo._xscale = noo._yscale = 10;
+		noo.scaleSpeed = scaleUpSpeed();
+		noo.lrSpeed = lrSpeed();
+		noo.hRad = hRad();
+		noo.vRad = vRad();
+		noo.hRadInc = hRadInc();
+		noo.vRadInc = vRadInc();
+		noo.lr = 0;
+		noo.onEnterFrame = _root.expand;
+	}
+}
+function expand() {
+	this.lr += this.lrSpeed;
+	this.hRad += this.hRadInc;
+	this.vRad += this.vRadInc;
+	this._x = Stage.width / 2 + this.hRad * Math.sin(this.lr * Math.PI / 180);
+	this._y = Stage.height / 2 + this.vRad * Math.cos(this.lr * Math.PI / 180);
+	this._yscale = this._xscale *= this.scaleSpeed;
+	this.swapDepths(Math.floor(this._xscale));
+	if (this._xscale > _root.scaleMax) {
+		this._alpha *= _root.fadeOut;
+		if (this._alpha < 3) {
+			this.removeMovieClip();
+		}
+	}
+}

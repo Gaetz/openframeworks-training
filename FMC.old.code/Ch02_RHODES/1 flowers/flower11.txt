@@ -1,0 +1,21 @@
+_quality = "LOW";
+var s:Number = 10;
+for (var i = 0; i<60; i++) {
+	var nm:MovieClip = attachMovie("petal", "petal" + i, i);
+	nm._x = Stage.width/2;
+	nm._y = Stage.height/2;
+	nm._rotation = Math.random()*360;
+	nm.onEnterFrame = function() {
+		this._xscale += 2;
+		this._yscale += 2;
+		if (this._xscale>200) {
+			this._xscale = 10;
+			this._yscale = 10;
+			this._alpha = 100;
+			this._rotation = Math.random()*360;
+		}
+	};
+	s = Math.random() * 200;
+	nm._xscale = nm._yscale=s;
+	nm.swapDepths(2000-nm._xscale);
+}
